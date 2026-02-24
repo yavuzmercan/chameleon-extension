@@ -50,7 +50,7 @@ If this privacy policy is updated, the changes will be reflected on this page wi
 
 If you have any questions about this privacy policy, please contact:
 
-**Email:** [YOUR_EMAIL_ADDRESS]
+**Email:** yavuzmercan@hotmail.com.tr
 
 ---
 
