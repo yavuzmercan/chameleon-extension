@@ -1,0 +1,1 @@
+layoutSelect.value  = settings.layout || 'b';

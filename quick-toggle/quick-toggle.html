@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chameleon Quick Toggle</title>
+  <link rel="stylesheet" href="quick-toggle.css">
+</head>
+<body>
+  <div class="quick-popup">
+
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="header-title">
+        <span class="logo">🦎</span>
+        <span class="title">Chameleon</span>
+      </div>
+    </div>
+
+    <!-- Current Domain -->
+    <div class="domain-section">
+      <div class="domain-label">Current Domain</div>
+      <div class="domain-name" id="currentDomain">Loading...</div>
+    </div>
+
+    <!-- Profile Info (if exists) -->
+    <div id="profileSection" class="profile-section" style="display: none;">
+      <div class="profile-header">
+        <div class="profile-name-area">
+          <span class="profile-name" id="profileName">Profile Name</span>
+        </div>
+        <div class="auto-inject-toggle">
+          <label class="toggle-switch-small">
+            <input type="checkbox" id="autoInjectToggle">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="auto-inject-label">Auto-inject</span>
+        </div>
+      </div>
+
+      <!-- Inject Action -->
+      <div class="inject-action">
+        <button id="injectNowBtn" class="btn-inject">
+          <span>⚡</span>
+          <span>Inject Now</span>
+        </button>
+      </div>
+
+      <!-- Snippets -->
+      <div id="snippetsContainer" class="snippets-container">
+        <!-- Snippets will be rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Empty State (if no profile) -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-icon">🦎</div>
+      <div class="empty-title">No profile for this domain</div>
+      <div class="empty-text">
+        Press <kbd>F12</kbd> to open DevTools<br>
+        Go to <strong>Chameleon</strong> tab<br>
+        Create a new profile
+      </div>
+    </div>
+
+    <!-- Status Message -->
+    <div class="status-message" id="statusMessage"></div>
+
+  </div>
+
+  <script src="../lib/storage.js"></script>
+  <script src="quick-toggle.js"></script>
+</body>
+</html>

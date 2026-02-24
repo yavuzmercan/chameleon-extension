@@ -1,0 +1,9 @@
+# Zip files
+*.zip
+
+# Screenshots (not needed in source)
+Chameleon-screenshot.png
+Chameleon-screenshot-1280x800.png
+
+# Claude memory
+.claude/

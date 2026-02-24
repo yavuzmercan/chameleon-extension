@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chameleon</title>
+  <link rel="stylesheet" href="panel.css">
+  <link rel="stylesheet" href="../lib/codemirror/codemirror.min.css">
+  <link rel="stylesheet" href="../lib/codemirror/addon/hint/show-hint.min.css">
+  <link rel="stylesheet" href="../lib/icomoon/style.css">
+</head>
+<body>
+
+  <div class="panel-root">
+
+    <!-- Left Column: Profiles & Snippets -->
+    <aside class="left-column">
+      <div class="column-header">
+        <span class="column-logo"><img src="../icons/icon32.png" /></span>
+        <span class="column-title">Chameleon</span>
+      </div>
+
+      <!-- Domain Info Compact -->
+      <div class="domain-compact">
+        <div class="domain-compact-label" data-i18n="currentDomainLabel">Domain:</div>
+        <div class="domain-compact-name" id="currentDomain">Loading...</div>
+        <div class="domain-compact-toggles">
+          <label title="Auto-inject"><input type="checkbox" id="autoInjectToggle"> Auto</label>
+          <label title="jQuery"><input type="checkbox" id="useJQueryToggle">jQuery</label>
+        </div>
+        <input type="text" id="urlPatternInput" placeholder="URL pattern" class="column-input">
+      </div>
+
+      <!-- Snippet Selector -->
+      <div class="snippet-compact">
+        <select id="snippetSelect" class="column-select"></select>
+        <div class="snippet-compact-controls">
+          <input type="text" id="snippetNameInput" placeholder="Name" class="column-input-sm">
+          <button id="addSnippetBtn" class="column-btn-sm">+</button>
+          <button id="deleteSnippetBtn" class="column-btn-sm column-btn-danger">×</button>
+        </div>
+        <div class="snippet-compact-meta">
+          <button id="moveUpBtn" class="column-btn-icon">▲</button>
+          <button id="moveDownBtn" class="column-btn-icon">▼</button>
+          <label class="snippet-enabled-compact"><input type="checkbox" id="snippetEnabledToggle" checked> On</label>
+          <label class="delay-compact">Delay: <input type="number" id="delayInput" min="0" max="60" value="0" class="delay-input-compact"></label>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Middle Column: Editors -->
+    <main class="middle-column">
+
+      <!-- Topbar Compact -->
+      <div class="topbar-compact">
+        <button class="topbar-btn" id="themeToggleBtn" title="Theme"><span class="icon icon-day"></span></button>
+        <button class="topbar-btn" id="langBtn" title="Language">TR</button>
+        <button class="topbar-btn" id="pickerBtn" data-i18n-title="titlePickElement" title="Picker"><span class="icon icon-selection"></span></button>
+        <button class="topbar-btn" id="historyBtn" data-i18n-title="titleHistory" title="History"><span class="icon icon-history"></span></button>
+        <button class="topbar-btn" id="settingsBtn" data-i18n-title="titleSettings" title="Settings"><span class="icon icon-setting"></span></button>
+        <button class="topbar-btn" id="helpBtn" data-i18n-title="titleHelp" title="Help">?</button>
+        <button class="topbar-btn" id="exportBtn" data-i18n-title="titleExport" title="Export"><span class="icon icon-upload"></span></button>
+        <div class="topbar-spacer"></div>
+        <button class="btn btn-secondary-sm" id="saveBtn" data-i18n="saveBtn">💾 Save</button>
+        <button class="btn btn-primary-sm" id="injectBtn" data-i18n="injectBtn">🚀 Inject</button>
+        <div class="export-dropdown">
+          <button class="btn btn-info-sm" id="exportFilesBtn" data-i18n="exportFilesBtn">📦 Export Files ▼</button>
+          <div class="export-dropdown-menu">
+            <div class="export-dropdown-item" data-minify="false" data-i18n="exportNormal">Export as ZIP</div>
+            <div class="export-dropdown-item" data-minify="true" data-i18n="exportMinified">Export Minified</div>
+          </div>
+        </div>
+        <button class="btn btn-danger-sm" id="clearBtn" data-i18n="clearBtn">🧹 Clear</button>
+        <a href="https://www.buymeacoffee.com/yavuzmercan" target="_blank" class="bmc-button" title="Support the developer">
+          ☕ Buy me a coffee
+        </a>
+      </div>
+
+      <!-- CSS/JS Side-by-Side -->
+      <div class="editors-area">
+        <div class="editor-pane">
+          <div class="editor-header">
+            <label>CSS</label>
+            <span class="editor-info" id="cssInfo">0 lines</span>
+            <div class="editor-header-actions">
+              <button class="btn-upload" id="uploadCssBtn" title="Upload CSS file" data-i18n-title="uploadCssTitle"><span class="icon icon-file-upload"></span></button>
+              <button class="btn-clear-editor" id="clearCssBtn" title="Clear CSS editor" data-i18n-title="clearCssTitle"><span class="icon icon-trash-can"></span></button>
+            </div>
+            
+          </div>
+          <div id="cssEditor" class="cm-editor-wrapper"></div>
+        </div>
+        <div class="editor-resizer" id="editorResizer"></div>
+        <div class="editor-pane">
+          <div class="editor-header">
+            <label>JavaScript</label>
+            <span class="editor-info" id="jsInfo">0 lines</span>
+            <div class="editor-header-actions">
+              <button class="btn-upload" id="uploadJsBtn" title="Upload JS file" data-i18n-title="uploadJsTitle"><span class="icon icon-file-upload"></span></button>
+              <button class="btn-clear-editor" id="clearJsBtn" title="Clear JS editor" data-i18n-title="clearJsTitle"><span class="icon icon-trash-can"></span></button>
+            </div>
+            
+          </div>
+          <div id="jsEditor" class="cm-editor-wrapper"></div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Modals (same as other layouts) -->
+  <div class="panel-overlay" id="panelOverlay">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 data-i18n="settingsPanelTitle">Settings & Profiles</h2>
+        <button class="btn-icon" id="closePanelBtn">✕</button>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <h3 data-i18n="profilesSectionTitle">Profiles</h3>
+          <input type="search" class="search-input" id="profileSearch" placeholder="Search..." data-i18n-placeholder="profileSearchPlaceholder">
+          <div class="profiles-list" id="profilesList"></div>
+        </div>
+        <div class="panel-section">
+          <h3 data-i18n="globalSettingsTitle">Global Settings</h3>
+          <label class="setting-item"><input type="checkbox" id="liveReloadToggle"><div class="setting-info"><span data-i18n="liveReloadLabel">Live Reload</span></div></label>
+          <label class="setting-item"><input type="checkbox" id="notificationsToggle"><div class="setting-info"><span data-i18n="notificationsLabel">Notifications</span></div></label>
+          <label class="setting-item"><input type="checkbox" id="autoInjectAllToggle"><div class="setting-info"><span data-i18n="autoInjectAllLabel">Auto-inject All</span></div></label>
+          <label class="setting-item"><input type="checkbox" id="themeToggle"><div class="setting-info"><span data-i18n="lightThemeLabel">Light Theme</span></div></label>
+          <label class="setting-item"><input type="checkbox" id="syncToggle"><div class="setting-info"><span data-i18n="syncLabel">Sync</span></div></label>
+          <div id="syncStatus" class="sync-status" style="display:none"></div>
+        </div>
+          <div class="panel-section">
+          <h3>Panel Layout</h3>
+          <label class="setting-item">
+            <select id="layoutSelect" class="layout-select">
+              <option value="a">Layout A — Sidebar + Stacked</option>
+              <option value="b" >Layout B — Side-by-Side</option>
+              <option value="c" selected>Layout C — Three Columns (Current)</option>
+            </select>
+          </label>
+          <small style="color: var(--text-dim); font-size: 11px; padding: 0 4px;">⚠️ Changes take effect when DevTools is reopened</small>
+        </div>
+        <div class="panel-section">
+          <h3 data-i18n="dataManagementTitle">Data Management</h3>
+          <button class="btn btn-secondary btn-block" id="importBtn" data-i18n="importProfilesBtn">Import</button>
+          <button class="btn btn-secondary btn-block" id="exportBtnFull" data-i18n="exportAllBtn">Export All</button>
+          <button class="btn btn-danger btn-block" id="clearAllBtn" data-i18n="clearAllProfilesBtn">Clear All</button>
+        </div>
+
+        <div class="settings-footer">
+          <small data-i18n="versionInfo">Version 2.0.0 | Made with ❤️ for developers</small>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-overlay" id="historyPanelOverlay">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 data-i18n="historyPanelTitle">History</h2>
+        <div class="panel-header-actions">
+          <button class="btn-icon-sm" id="clearHistoryBtn">Clear</button>
+          <button class="btn-icon" id="closeHistoryPanelBtn">✕</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div id="historyList" class="history-list-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-overlay" id="helpPanelOverlay">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 data-i18n="helpPanelTitle">Help</h2>
+        <button class="btn-icon" id="closeHelpPanelBtn">✕</button>
+      </div>
+      <div class="panel-body">
+        <div id="helpContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="picker-modal-overlay" id="pickerModalOverlay">
+    <div class="picker-modal">
+      <div class="picker-modal-header">
+        <span class="picker-modal-title" data-i18n="pickerModalTitle">Element Picked</span>
+        <button class="btn-icon" id="pickerModalClose">✕</button>
+      </div>
+      <div class="picker-modal-selector"><code id="pickerSelector"></code></div>
+      <div class="picker-modal-label" data-i18n="pickerInsertAsLabel">Insert as:</div>
+      <div class="picker-modal-actions">
+        <button class="picker-modal-btn" id="pickerInsertCss"><span class="picker-modal-btn-icon">🎨</span><span class="picker-modal-btn-label"><strong>CSS</strong><small>selector { }</small></span></button>
+        <button class="picker-modal-btn" id="pickerInsertJs"><span class="picker-modal-btn-icon">⚡</span><span class="picker-modal-btn-label"><strong>JavaScript</strong><small>querySelector</small></span></button>
+        <button class="picker-modal-btn picker-modal-btn-jq" id="pickerInsertJq"><span class="picker-modal-btn-icon">🟡</span><span class="picker-modal-btn-label"><strong>jQuery</strong><small>$('selector')</small><span class="jq-hint">jQuery enabled</span></span></button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="importFileInput" accept=".json" style="display:none;">
+
+  <!-- Hidden file inputs for CSS/JS upload -->
+  <input type="file" id="cssFileInput" accept=".css" style="display:none;">
+  <input type="file" id="jsFileInput" accept=".js" style="display:none;">
+
+  <!-- Custom Color Picker Popup -->
+  <div id="colorPickerPopup" class="color-picker-popup" style="display: none;">
+    <div class="color-picker-popup-header">
+      <span>Pick Color</span>
+      <button id="colorPickerClose" class="color-picker-close">×</button>
+    </div>
+    <div class="color-picker-popup-body">
+      <input type="color" id="colorPickerInput" class="color-picker-input">
+      <input type="text" id="colorPickerHexInput" class="color-picker-hex" placeholder="#000000">
+      <div class="color-picker-alpha">
+        <label>Alpha:</label>
+        <input type="range" id="colorPickerAlpha" min="0" max="100" value="100" class="color-picker-alpha-slider">
+        <span id="colorPickerAlphaValue">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="../lib/codemirror/codemirror.min.js"></script>
+  <script src="../lib/codemirror/mode/css/css.min.js"></script>
+  <script src="../lib/codemirror/mode/javascript/javascript.min.js"></script>
+  <script src="../lib/codemirror/addon/hint/show-hint.min.js"></script>
+  <script src="../lib/codemirror/addon/hint/css-hint.min.js"></script>
+  <script src="../lib/codemirror/addon/hint/anyword-hint.min.js"></script>
+  <script src="../lib/codemirror/addon/edit/matchbrackets.min.js"></script>
+  <script src="../lib/codemirror/addon/edit/closebrackets.min.js"></script>
+  <script src="../lib/codemirror/addon/display/placeholder.min.js"></script>
+  <script src="../lib/i18n.js"></script>
+  <script src="../lib/storage.js"></script>
+  <script src="../lib/jszip.min.js"></script>
+  <script src="../lib/terser.min.js"></script>
+  <script src="../lib/csso.min.js"></script>
+  <script src="../lib/panel-common.js"></script>
+  <script src="../lib/panel.js"></script>
+  <script src="panel-c.js"></script>
+
+</body>
+</html>
